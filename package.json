@@ -1,16 +1,29 @@
 {
   "name": "vue-bottom-sheet",
+  "license": "MIT",
   "version": "0.1.0",
   "private": false,
   "author": "valentingavran",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valentingavran/vue-bottom-sheet.git"
+  },
+  "keywords": [
+    "vue",
+    "vuejs",
+    "component",
+    "swipeable",
+    "bottom sheet",
+    "material design"
+  ],
+  "main": "dist/vue-bottom-sheet.umd.js",
+  "module": "dist/vue-bottom-sheet.common.min.js",
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
     "build": "vue-cli-service build --name vue-bottom-sheet --entry ./src/index.js --target lib",
     "lint": "vue-cli-service lint",
     "prepublishOnly": "npm run lint && npm run build"
   },
-  "main": "dist/vue-bottom-sheet.umd.js",
-  "module": "dist/vue-bottom-sheet.common.min.js",
   "files": [
     "dist/*.css",
     "dist/*.map",
@@ -55,10 +68,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "keywords": [
-    "vue",
-    "component"
-  ],
-  "license": "MIT"
+  ]
 }
