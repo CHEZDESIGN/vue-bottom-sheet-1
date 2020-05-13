@@ -2,6 +2,7 @@
   "name": "vue-bottom-sheet",
   "version": "0.1.0",
   "private": false,
+  "author": "valentingavran",
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
     "build": "vue-cli-service build --name vue-bottom-sheet --entry ./src/index.js --target lib",
