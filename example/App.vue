@@ -1,17 +1,23 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <sandbox>
+      <VueBottomSheet />
+    </sandbox>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { Sandbox } from 'component-fixture'
+import 'font-awesome/css/font-awesome.css'
+import 'component-fixture/dist/ComponentFixture.css'
+import VueBottomSheet from '@/components/VueBottomSheet.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Sandbox,
+    VueBottomSheet
   }
 }
 </script>
