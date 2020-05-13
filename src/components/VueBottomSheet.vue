@@ -1,57 +1,94 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://www.npmjs.com/package/vue-cli-plugin-component" target="_blank" rel="noopener">component</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div class="card" :style="{minHeight: minSheetHeight+'px',height:sheetHeight+'px'}" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
+      <img v-if="imageHeight >= 0" class="image" :style="{maxHeight: '25%',height:imageHeight+'%'}"/>
+      <div class="menu-chip"></div>
+            Valentin Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </div>
 </template>
 
 <script>
+import { HeightAnimator } from '@/mixins/HeightAnimator'
+
 export default {
-  name: 'VueBottomSheet',
-  props: {
-    msg: String
+  mixins: [HeightAnimator],
+  data () {
+    return {
+      stage: 0,
+      minSheetHeight: 0,
+      oldSheetHeight: 0, // temp when touch started
+      sheetHeight: 0,
+      oldImageHeight: 0, // temp when touch started
+      imageHeight: 0,
+      deltaY: 0,
+      touchStart: 0
+    }
+  },
+  mounted () {
+    this.minSheetHeight = window.innerHeight * 0.15
+    this.sheetHeight = this.minSheetHeight
+  },
+  methods: {
+    onTouchStart: function (e) {
+      this.touchStart = e.changedTouches[0].clientY
+      this.oldSheetHeight = this.sheetHeight
+      this.oldImageHeight = this.imageHeight
+    },
+    onTouchMove: function (e) {
+      this.deltaY = e.changedTouches[0].clientY - this.touchStart
+      if ((this.sheetHeight <= this.minSheetHeight && this.deltaY > 0) || (this.sheetHeight >= window.innerHeight && this.deltaY < 0)) {
+      } else {
+        this.sheetHeight = this.oldSheetHeight - this.deltaY
+        if (this.stage <= 1) {
+          this.imageHeight = this.oldImageHeight - this.deltaY * 0.2
+        }
+      }
+    },
+    onTouchEnd: function () {
+      const direction = this.deltaY < 0 ? 'up' : 'down'
+      if ((direction === 'up' || this.deltaY === 0) && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < window.innerHeight * 0.5) {
+        this.animateHeight(this.sheetHeight, window.innerHeight * 0.5, (value) => { this.sheetHeight = value })
+        this.imageHeight = 25
+        this.stage = 1
+      } else if ((direction === 'up' || (this.deltaY === 0 && this.stage === 1)) && this.sheetHeight >= window.innerHeight * 0.5) {
+        this.animateHeight(this.sheetHeight, window.innerHeight, (value) => { this.sheetHeight = value })
+        this.stage = 2
+      } else if ((direction === 'down' || (this.deltaY === 0 && this.stage === 2)) && this.sheetHeight > window.innerHeight * 0.5) {
+        this.animateHeight(this.sheetHeight, window.innerHeight * 0.5, (value) => { this.sheetHeight = value })
+        this.stage = 1
+      } else if (direction === 'down' && this.sheetHeight > this.minSheetHeight && this.sheetHeight < window.innerHeight * 0.5) {
+        this.animateHeight(this.sheetHeight, this.minSheetHeight, (value) => { this.sheetHeight = value })
+        this.animateHeight(this.imageHeight, 0, (value) => { this.imageHeight = value })
+        this.stage = 0
+      }
+      this.deltaY = 0
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style >
+.image{
+  background-color: grey;
+  width: 100%;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.menu-chip{
+  margin: 14px auto;
+  height: 4px;
+  width: 30px;
+  border-radius: 2px;
+  background-color:grey;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.card{
+  position:fixed;
+  bottom:0;
+  z-index:100;
+  width:100%;
+  max-height:100%;
+  elevation:4;
 }
 </style>

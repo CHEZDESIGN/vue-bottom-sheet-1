@@ -1,14 +1,10 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <sandbox>
-      <VueBottomSheet />
-    </sandbox>
+      <VueBottomSheet style="position:fixed;bottom:0"/>
   </div>
 </template>
 
 <script>
-import { Sandbox } from 'component-fixture'
 import 'font-awesome/css/font-awesome.css'
 import 'component-fixture/dist/ComponentFixture.css'
 import VueBottomSheet from '@/components/VueBottomSheet.vue'
@@ -16,7 +12,6 @@ import VueBottomSheet from '@/components/VueBottomSheet.vue'
 export default {
   name: 'App',
   components: {
-    Sandbox,
     VueBottomSheet
   }
 }
@@ -29,6 +24,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
