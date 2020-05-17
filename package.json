@@ -1,7 +1,8 @@
 {
   "name": "vue-bottom-sheet",
+  "description": "Swipeable Material Bottom Sheet implementation that does not require any dependencies. Works only on touchscreens."
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "author": "valentingavran",
   "repository": {
