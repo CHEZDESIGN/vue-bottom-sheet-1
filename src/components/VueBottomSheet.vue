@@ -1,5 +1,5 @@
 <template>
-<div ref="container" :style="containerStyles" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
+<div ref="container" class="hide-scrollbar" :style="containerStyles" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
   <img v-if="image && imageHeight >= 0" :style="imageStyles" :src="imageSrc" />
   <div class="menu-chip"></div>
   <slot></slot>
@@ -121,5 +121,13 @@ export default {
   width: 30px;
   border-radius: 2px;
   background-color: grey;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 </style>
