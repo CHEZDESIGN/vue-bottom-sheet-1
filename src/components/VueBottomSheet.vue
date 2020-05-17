@@ -1,94 +1,125 @@
 <template>
-    <div class="card" :style="{minHeight: minSheetHeight+'px',height:sheetHeight+'px'}" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
-      <img v-if="imageHeight >= 0" class="image" :style="{maxHeight: '25%',height:imageHeight+'%'}"/>
-      <div class="menu-chip"></div>
-            Valentin Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </div>
+<div ref="container" :style="containerStyles" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
+  <img v-if="image && imageHeight >= 0" :style="imageStyles" :src="imageSrc" />
+  <div class="menu-chip"></div>
+  <slot></slot>
+</div>
 </template>
 
 <script>
 import { HeightAnimator } from '@/mixins/HeightAnimator'
-
 export default {
   mixins: [HeightAnimator],
-  data () {
+  props: {
+    backgroundColor: {
+      type: String,
+      default: 'white'
+    },
+    image: Boolean,
+    imageSrc: String,
+    minSheetHeight: {
+      type: Number,
+      default: window.innerHeight * 0.15
+    },
+    halfOpenSheetHeight: {
+      type: Number,
+      default: window.innerHeight * 0.5
+    },
+    maxSheetHeight: {
+      type: Number,
+      default: window.innerHeight
+    }
+  },
+  data: function () {
     return {
       stage: 0,
-      minSheetHeight: 0,
       oldSheetHeight: 0, // temp when touch started
-      sheetHeight: 0,
+      sheetHeight: this.minSheetHeight,
       oldImageHeight: 0, // temp when touch started
       imageHeight: 0,
       deltaY: 0,
-      touchStart: 0
+      touchStartPosition: 0,
+      scrollable: false,
+      scrollTop: 0
     }
-  },
-  mounted () {
-    this.minSheetHeight = window.innerHeight * 0.15
-    this.sheetHeight = this.minSheetHeight
   },
   methods: {
     onTouchStart: function (e) {
-      this.touchStart = e.changedTouches[0].clientY
+      this.touchStartPosition = e.changedTouches[0].clientY
       this.oldSheetHeight = this.sheetHeight
       this.oldImageHeight = this.imageHeight
     },
     onTouchMove: function (e) {
-      this.deltaY = e.changedTouches[0].clientY - this.touchStart
-      if ((this.sheetHeight <= this.minSheetHeight && this.deltaY > 0) || (this.sheetHeight >= window.innerHeight && this.deltaY < 0)) {
-      } else {
-        this.sheetHeight = this.oldSheetHeight - this.deltaY
-        if (this.stage <= 1) {
-          this.imageHeight = this.oldImageHeight - this.deltaY * 0.2
+      this.scrollTop = this.$refs.container.scrollTop
+      if (this.scrollTop === 0) {
+        this.deltaY = e.changedTouches[0].clientY - this.touchStartPosition
+        if ((this.sheetHeight <= this.minSheetHeight && this.deltaY > 0) || (this.sheetHeight >= this.maxSheetHeight && this.deltaY < 0)) {} else {
+          this.sheetHeight = this.oldSheetHeight - this.deltaY
+          if (this.stage <= 1) {
+            this.imageHeight = this.oldImageHeight - this.deltaY * 0.2
+          }
         }
       }
     },
     onTouchEnd: function () {
-      const direction = this.deltaY < 0 ? 'up' : 'down'
-      if ((direction === 'up' || this.deltaY === 0) && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < window.innerHeight * 0.5) {
-        this.animateHeight(this.sheetHeight, window.innerHeight * 0.5, (value) => { this.sheetHeight = value })
-        this.imageHeight = 25
-        this.stage = 1
-      } else if ((direction === 'up' || (this.deltaY === 0 && this.stage === 1)) && this.sheetHeight >= window.innerHeight * 0.5) {
-        this.animateHeight(this.sheetHeight, window.innerHeight, (value) => { this.sheetHeight = value })
-        this.stage = 2
-      } else if ((direction === 'down' || (this.deltaY === 0 && this.stage === 2)) && this.sheetHeight > window.innerHeight * 0.5) {
-        this.animateHeight(this.sheetHeight, window.innerHeight * 0.5, (value) => { this.sheetHeight = value })
-        this.stage = 1
-      } else if (direction === 'down' && this.sheetHeight > this.minSheetHeight && this.sheetHeight < window.innerHeight * 0.5) {
-        this.animateHeight(this.sheetHeight, this.minSheetHeight, (value) => { this.sheetHeight = value })
-        this.animateHeight(this.imageHeight, 0, (value) => { this.imageHeight = value })
-        this.stage = 0
+      if (this.scrollTop === 0) {
+        const direction = this.deltaY < 0 ? 'up' : 'down'
+        if ((direction === 'up' || this.deltaY === 0) && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
+          this.animateHeight(this.sheetHeight, this.halfOpenSheetHeight, (value) => { this.sheetHeight = value })
+          this.imageHeight = 25
+          this.stage = 1
+        } else if ((direction === 'up' || (this.deltaY === 0 && this.stage === 1)) && this.sheetHeight >= this.halfOpenSheetHeight) {
+          this.animateHeight(this.sheetHeight, this.maxSheetHeight, (value) => { this.sheetHeight = value })
+          this.stage = 2
+          this.scrollable = true
+        } else if ((direction === 'down' || (this.deltaY === 0 && this.stage === 2)) && this.sheetHeight > this.halfOpenSheetHeight) {
+          this.animateHeight(this.sheetHeight, this.halfOpenSheetHeight, (value) => { this.sheetHeight = value })
+          this.stage = 1
+          this.scrollable = false
+          this.$refs.container.scrollTop = 0
+        } else if (direction === 'down' && this.sheetHeight > this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
+          this.animateHeight(this.sheetHeight, this.minSheetHeight, (value) => { this.sheetHeight = value })
+          this.animateHeight(this.imageHeight, 0, (value) => { this.imageHeight = value })
+          this.scrollable = false
+          this.stage = 0
+        }
+        this.deltaY = 0
       }
-      this.deltaY = 0
+    }
+  },
+  computed: {
+    containerStyles: function () {
+      return {
+        bottom: 0,
+        zIndex: '100',
+        width: '100%',
+        maxHeight: '100%',
+        position: 'fixed',
+        minHeight: this.minSheetHeight + 'px',
+        height: this.sheetHeight + 'px',
+        backgroundColor: this.backgroundColor,
+        overflow: this.scrollable ? 'auto' : 'hidden'
+      }
+    },
+    imageStyles: function () {
+      return {
+        backgroundColor: 'grey',
+        width: '100%',
+        maxHeight: '25%',
+        height: this.imageHeight + '%',
+        objectFit: 'cover'
+      }
     }
   }
 }
 </script>
 
 <style >
-.image{
-  background-color: grey;
-  width: 100%;
-}
-.menu-chip{
+.menu-chip {
   margin: 14px auto;
   height: 4px;
   width: 30px;
   border-radius: 2px;
-  background-color:grey;
-}
-.card{
-  position:fixed;
-  bottom:0;
-  z-index:100;
-  width:100%;
-  max-height:100%;
-  elevation:4;
+  background-color: grey;
 }
 </style>
