@@ -50,7 +50,8 @@ export default {
     },
     onTouchMove: function (e) {
       this.scrollTop = this.$refs.container.scrollTop
-      if (this.scrollTop === 0) {
+      console.log(this.scrollTop)
+      if (this.scrollTop <= 0) {
         this.deltaY = e.changedTouches[0].clientY - this.touchStartPosition
         if ((this.sheetHeight <= this.minSheetHeight && this.deltaY > 0) || (this.sheetHeight >= this.maxSheetHeight && this.deltaY < 0)) {} else {
           this.sheetHeight = this.oldSheetHeight - this.deltaY
@@ -61,7 +62,7 @@ export default {
       }
     },
     onTouchEnd: function () {
-      if (this.scrollTop === 0) {
+      if (this.scrollTop <= 0) {
         const direction = this.deltaY < 0 ? 'up' : 'down'
         if (direction === 'up' && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
           this.animateHeight(this.sheetHeight, this.halfOpenSheetHeight, (value) => { this.sheetHeight = value })
