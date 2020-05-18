@@ -36,3 +36,5 @@ export default {
 | minSheetHeight | false | Number | window.innerHeight * 0.15 | Height of the sheet when closed |
 | halfOpenSheetHeight | false | Number | window.innerHeight * 0.5 | Height of the sheet when open in the first stage |
 | maxSheetHeight | false | Number | window.innerHeight | Height of the sheet when open in the second (last) stage |
+| rounded | false | Boolean | false | Round the top two corners of the sheet |
+| elevation | false | String | 8 | Sets the elevation of the sheet [0...24] |
