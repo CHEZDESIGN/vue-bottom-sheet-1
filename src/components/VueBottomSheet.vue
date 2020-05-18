@@ -85,11 +85,12 @@ export default {
           this.stage = 1
           this.scrollable = false
           this.$refs.container.scrollTop = 0
-        } else if (direction === 'down' && this.sheetHeight > this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
+        } else if (direction === 'down' && this.sheetHeight < this.halfOpenSheetHeight) {
           this.animateHeight(this.sheetHeight, this.minSheetHeight, (value) => { this.sheetHeight = value })
           this.animateHeight(this.imageHeight, 0, (value) => { this.imageHeight = value })
-          this.scrollable = false
           this.stage = 0
+          this.scrollable = false
+          this.$refs.container.scrollTop = 0
         }
         this.deltaY = 0
       }
