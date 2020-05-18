@@ -28,8 +28,8 @@ export default {
 
 ## Properties
 
-| Name | Required | Type | Default | Description |
-|--|--|--|--|--|--|--|--|
+|Name|Required|Type| Default| Description |
+|----|--------|----|--------|-------------|
 | backgroundColor | false | String | white | Color of the sheet |
 | image | false | Boolean | false | Adds an animated title image to the sheet |
 | imageSrc | false | String | - | Specifies the cover image. Requires the attribute `image` |
