@@ -163,7 +163,7 @@ export default {
         height: this.sheetHeight + 'px',
         backgroundColor: this.backgroundColor,
         overflow: this.scrollable ? 'auto' : 'hidden',
-        borderRadius: this.sheetHeight < this.maxSheetHeight ? '14px 14px 0px 0px' : '',
+        borderRadius: this.rounded && this.sheetHeight < this.maxSheetHeight ? '14px 14px 0px 0px' : '',
         boxShadow: this.getElevation(this.elevation)
       }
     },
