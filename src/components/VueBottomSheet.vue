@@ -1,7 +1,6 @@
 <template>
 <div ref="container" class="hide-scrollbar" :style="containerStyles" @touchmove="onTouchMove($event)" @touchstart="onTouchStart($event)" @touchend="onTouchEnd()">
   <img v-if="image && imageHeight >= 0" :style="imageStyles" :src="imageSrc" />
-  <div class="menu-chip"></div>
   <slot></slot>
 </div>
 </template>
@@ -64,15 +63,15 @@ export default {
     onTouchEnd: function () {
       if (this.scrollTop === 0) {
         const direction = this.deltaY < 0 ? 'up' : 'down'
-        if ((direction === 'up' || this.deltaY === 0) && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
+        if (direction === 'up' && this.sheetHeight >= this.minSheetHeight && this.sheetHeight < this.halfOpenSheetHeight) {
           this.animateHeight(this.sheetHeight, this.halfOpenSheetHeight, (value) => { this.sheetHeight = value })
           this.imageHeight = 25
           this.stage = 1
-        } else if ((direction === 'up' || (this.deltaY === 0 && this.stage === 1)) && this.sheetHeight >= this.halfOpenSheetHeight) {
+        } else if (direction === 'up' && this.sheetHeight >= this.halfOpenSheetHeight) {
           this.animateHeight(this.sheetHeight, this.maxSheetHeight, (value) => { this.sheetHeight = value })
           this.stage = 2
           this.scrollable = true
-        } else if ((direction === 'down' || (this.deltaY === 0 && this.stage === 2)) && this.sheetHeight > this.halfOpenSheetHeight) {
+        } else if (direction === 'down' && this.sheetHeight > this.halfOpenSheetHeight && this.sheetHeight < this.maxSheetHeight) {
           this.animateHeight(this.sheetHeight, this.halfOpenSheetHeight, (value) => { this.sheetHeight = value })
           this.stage = 1
           this.scrollable = false
@@ -115,14 +114,6 @@ export default {
 </script>
 
 <style >
-.menu-chip {
-  margin: 14px auto;
-  height: 4px;
-  width: 30px;
-  border-radius: 2px;
-  background-color: grey;
-}
-
 .hide-scrollbar {
   -ms-overflow-style: none;
 }
