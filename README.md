@@ -12,7 +12,9 @@ npm install vue-bottom-sheet
 
 ## Usage
 ```HTML
-<VueBottomSheet></VueBottomSheet>
+<VueBottomSheet>
+  <!--> Your content here </-->
+</VueBottomSheet>
 ```
 ```javascript
 import { VueBottomSheet } from 'vue-bottom-sheet'
@@ -26,25 +28,11 @@ export default {
 
 ## Properties
 
-```javascript
-props: {
-  backgroundColor: {
-    type: String,
-    default: 'white'
-  },
-  image: Boolean,
-  imageSrc: String,
-  minSheetHeight: {
-    type: Number,
-    default: window.innerHeight * 0.15
-  },
-  halfOpenSheetHeight: {
-    type: Number,
-    default: window.innerHeight * 0.5
-  },
-  maxSheetHeight: {
-    type: Number,
-    default: window.innerHeight
-  }
-}
-```
+| Name | Required | Type | Default | Description |
+|--|--|--|--|--|--|--|--|
+| backgroundColor | false | String | white | Color of the sheet |
+| image | false | Boolean | false | Adds an animated title image to the sheet |
+| imageSrc | false | String | - | Specifies the cover image. Requires the attribute `image` |
+| minSheetHeight | false | Number | window.innerHeight * 0.15 | Height of the sheet when closed |
+| halfOpenSheetHeight | false | Number | window.innerHeight * 0.5 | Height of the sheet when open in the first stage |
+| maxSheetHeight | false | Number | window.innerHeight | Height of the sheet when open in the second (last) stage |
